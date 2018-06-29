@@ -25,6 +25,9 @@
 #include <openssl/ssl.h> 
 #include <openssl/err.h> 
 
+#include <chrono>
+#include <ctime>
+
 using namespace std;
 
 /**
@@ -52,19 +55,36 @@ int test_tcp_echo()
 	
 	cout << "connection returned. errno=" << errno << endl;
 
+	// 一发一收，并统计每100个请求收发服务的处理时长，观察服务器性能是否会随着时间便弱。
+	int processCounter = 0;
+	auto timeStart = std::chrono::system_clock::now();
+	auto timeEnd = std::chrono::system_clock::now();
 	while(true)
 	{
+		if(processCounter == 0) 
+		{
+			timeStart = std::chrono::system_clock::now();
+		}
+
 		const char *msg = "hello";
 		int len = strlen(msg);
 		write(sockfd, &len, sizeof(len));
 		write(sockfd, msg, len);
-		cout << "send: hello" << endl;
+		//cout << "send: hello" << endl;
 
 		char buff[1024] = {0};
 		read(sockfd, buff, sizeof(buff));
-		cout << "recv len=" << *(int *)buff << endl;
-		cout << "recv:" << buff + sizeof(int) << endl;
-		usleep(1000);
+		//cout << "recv len=" << *(int *)buff << endl;
+		//cout << "recv:" << buff + sizeof(int) << endl;
+		
+		processCounter++;
+		if(processCounter == 100) 
+		{
+			processCounter = 0;
+			timeEnd = std::chrono::system_clock::now();
+			std::chrono::duration<double> elapsedTimeSeconds = timeEnd - timeStart;
+			cout << "send recv 100 request elapsed " << elapsedTimeSeconds.count() << " seconds." << endl;
+		}
 	}
 
 	return 1;

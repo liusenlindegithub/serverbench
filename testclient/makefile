@@ -24,7 +24,7 @@ prepare:
 
 $(OUTPUTDIR)/%.d:%.cpp
 	@[ -e $(OUTPUTDIR) ] || mkdir $(OUTPUTDIR) && chmod 777 $(OUTPUTDIR)
-	@g++ $(INCLUDE) -MM -MD -o $@ $<
+	@g++ $(INCLUDE) $(CXXFLAGS) -MM -MD -o $@ $<
 	@echo "generate $< ==> $@"
 	@sed -i '1s/^/$(OUTPUTDIR)\//g' $@
 
