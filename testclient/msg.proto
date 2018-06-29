@@ -1,0 +1,25 @@
+package basic;
+
+enum MessageId
+{
+    DEMO_MSG_ID = 0;
+}
+
+enum MessageType
+{
+    MSGTYPE_WETEST = 0;
+}
+
+
+message Header
+{
+    required MessageId msgId = 1;       //必选字段
+    required MessageType msgType = 2;    //必选字段
+}
+
+
+message DemoMsg
+{
+    required Header header = 1;
+    required string field = 2;
+}

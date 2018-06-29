@@ -1,0 +1,13 @@
+性能测试工具：
+oprofile
+
+内存泄露工具:
+fsantize=leak
+http://stackoverflow.com/questions/31210053/gcc-and-fsanitize-leak
+
+内存错误检查：
+AddressSanitizer(asan)
+https://en.wikipedia.org/wiki/AddressSanitizer
+
+
+58874620

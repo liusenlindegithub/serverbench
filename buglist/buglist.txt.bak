@@ -1,0 +1,11 @@
+1. control 进程对 server管理问题
+2017-07-14
+测试过程：
+（1）设置server最大进程数为 1，执行run.sh，重新启动 my_spp；
+（2）进入bin，手动再启动一个server，此时新server会出现bind error
+（3）control 判断server进程超限，停止了旧的server，保留了新server
+（4）而新server是bind error，无法连接用户请求
+2017-07-14
+解决：
+原本做法是当control检查进程数超限后，删除列表中之前的进程，导致原本可用的server被销毁。
+现在会将删除新进入的进程，保留原有进程。

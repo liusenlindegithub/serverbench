@@ -1,0 +1,9 @@
+package demo;
+
+message msg
+{
+    required int32 MsgType = 1;     //必选字段
+    required string MsgInfo = 2;    //必选字段
+    required string MsgFrom = 3;    //必选字段
+    optional string opt = 4;        //可选字段
+}
