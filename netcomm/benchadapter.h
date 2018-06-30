@@ -4,7 +4,7 @@
 typedef int (*bench_handle_init_t)(void *, void *);
 typedef int (*bench_handle_input_t)(void *, void *);
 typedef int (*bench_handle_route_t)(void *, void *);
-typedef int (*bench_handle_process_t)(void *, void *);
+typedef int (*bench_handle_process_t)(char *, int, int, void *);
 
 typedef struct
 {

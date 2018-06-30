@@ -34,14 +34,14 @@ int bench_handle_route(void *arg1, void *arg2)
 }
 
 extern "C"
-int bench_handle_process(void *arg1, void *arg2)
+//int bench_handle_process(void *arg1, void *arg2)
+int bench_handle_process(char *data, int datalen, int seq, void *arg)
 {
 	cout << "bench_handle_process" << endl;
 
-	CClientData *dataCache = (CClientData *)arg1;
 	ProcessCommItem *commItem = dynamic_cast<ProcessCommItem *>((ProcessCommItem *)arg2);
 
-	if(dataCache == NULL) {
+	if(data == NULL) {
 		cout << "dataCache NULL Pointer..." << endl;
 		exit(0);
 	}
@@ -50,30 +50,12 @@ int bench_handle_process(void *arg1, void *arg2)
 		cout << "commitem NULL Pointer..." << endl;
 		exit(0); 
 	}
-
-	int seq;
-	shared_ptr<datapackage> response = PackageProcess::getPackage(dataCache, seq);
-	if(response != NULL)
-	{
-		cout << "bench_handle_process data=" << response->getData() << endl;
-
-		// 返回客户端
-		shared_ptr<ShmProducer> producer = commItem->getProducer();
-		if(producer) {
-			char *data = (char *)malloc(sizeof(int) + response->header.mDataLength);
-			int datalen = response->header.mDataLength + sizeof(int);
-			memcpy(data, &datalen, sizeof(int));
-			memcpy(data + sizeof(int), response->getData(), response->header.mDataLength);
-
-			producer->produce(data, datalen, seq);
-			producer->sendNotify();
-
-			delete data;
-		}
-	}
-	else
-	{
-		cout << "bench_handle_process NULL FAILED" << endl;
+	
+	// 返回客户端
+	shared_ptr<ShmProducer> producer = commItem->getProducer();
+	if(producer) {
+		producer->produce(data, datalen, seq);
+		producer->sendNotify();
 	}
 
 	return 0;

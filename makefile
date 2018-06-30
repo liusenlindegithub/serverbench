@@ -22,8 +22,11 @@ all:subdirs
 
 
 subdirs:
-	@mkdir bin
-	@cp swb.sh bin/swb.sh
+	@if [ ! -d "bin" ]; then\
+		mkdir bin; \
+	fi \
+
+	@cp swb.sh bin/swb.sh \
 
 	@for dir in $(SUBDIRS); \
 	do \

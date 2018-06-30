@@ -56,10 +56,10 @@ void Notifier::inputNotify()
 			int ret = comsumer->consume((void *)recvbuff, buffsize, datalen, seq);
 			while(ret == 0)
 			{
-				CClientData clientdata;
-				clientdata.write((char *)&seq, sizeof(int));
-				clientdata.write(recvbuff, datalen);
-				Benchadapter::benchso.bench_handle_process((void *)&clientdata, (void *)commItem.get());
+				//CClientData clientdata;
+				//clientdata.write((char *)&seq, sizeof(int));
+				//clientdata.write(recvbuff, datalen);
+				Benchadapter::benchso.bench_handle_process(recvbuff, datalen, seq, (void *)commItem.get());
 
 				ret = comsumer->consume((void *)recvbuff, buffsize, datalen, seq);
 			}
