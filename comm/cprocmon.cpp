@@ -8,7 +8,6 @@ using namespace std;
 
 CProcMonitorCli::CProcMonitorCli()
 {
-	cout << "CProcMonitorCli()" << endl;
 	mqcomm = shared_ptr<CMQCommu>(new CMQCommu(HEART_BEAT_MQID));
 }
 

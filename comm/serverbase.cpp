@@ -10,7 +10,7 @@ int CServerBase::sigflag = 0;
 
 CServerBase::CServerBase()
 {
-	cout << "CServerBase()" << endl;
+	
 }
 
 CServerBase::~CServerBase()
@@ -33,7 +33,7 @@ void CServerBase::startup()
 
 void CServerBase::realrun()
 {
-	cout << "CServerBase::realrun()" << endl;
+	
 }
 
 void CServerBase::sigusr1_handle(int signo)

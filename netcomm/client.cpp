@@ -151,16 +151,17 @@ void CClient::processData()
 				{
 					producer->produce(cachedata, protoLen, seq);
 					producer->sendNotify();
-					cout << "----> proxy produce... data=" << string(cachedata + sizeof(int)) << endl;
 				}
 				else
 				{
-					cout << "----> producer=null" << endl;
+					log_error("NULL Point error. no share memory pool of producer!");
+					cout << "NULL Point error. no share memory pool of producer.!" << endl;
 				}
 			}
 			else
 			{
-				cout << "----> commItem=null" << endl;
+				log_error("NULL Point error. cannot find process communication item by route id!");
+				cout << "NULL Point error. cannot find process communication item by route id!" << endl;
 			}
 
 			dataCache->alignPosition(protoLen);

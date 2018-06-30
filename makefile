@@ -18,25 +18,41 @@
 SUBDIRS := utils netcomm comm proxy worker controller
 CURDIR := $(shell pwd)
 
-all:subdirs
+all:prepare compile
 
-
-subdirs:
+prepare:
 	@if [ ! -d "bin" ]; then\
 		mkdir bin; \
-	fi \
+	fi 
 
 	@cp swb.sh bin/swb.sh \
 
+	@if [ ! -d "bin/log/default2" ]; then\
+		mkdir -p bin/log/default2; \
+	fi
+
+	@if [ ! -d "bin/log/control" ]; then\
+		mkdir -p bin/log/control; \
+	fi
+	
+	@if [ ! -d "bin/log/server" ]; then\
+		mkdir -p bin/log/server; \
+	fi
+
+	@if [ ! -d "bin/log/worker" ]; then\
+		mkdir -p bin/log/worker; \
+	fi
+
+compile:
 	@for dir in $(SUBDIRS); \
 	do \
 		cd $(CURDIR)/$$dir; rm -rf *.bak; make; cd $(CURDIR);\
-	done;
+	done
 
 clean:
 	@for dir in $(SUBDIRS); \
 	do \
 		cd $(CURDIR)/$$dir; rm -rf *.bak; make clean;cd $(CURDIR); \
-	done;
+	done
 	@rm -rf *.bak
 	@rm -rf bin

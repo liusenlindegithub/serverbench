@@ -6,6 +6,8 @@
 #include "../netcomm/processcomm.h"
 #include "../netcomm/benchadapter.h"
 
+#include "../utils/log/log.h"
+
 using namespace std;
 
 void CDefaultWorker::realrun()
@@ -18,8 +20,6 @@ void CDefaultWorker::realrun()
 		EpollResult result =  pollerunit.waitPollerEvents(1000);
 		pollerunit.processPollerEvents(result);
 		
-		//cout << "DefaultWorker::realrun()..." << endl;
-
 		// 定时向controller发送心跳
 		time_t now = time(NULL);
 		if((now - lastmontime) >= 5)
@@ -38,6 +38,9 @@ void CDefaultWorker::realrun()
 
 void CDefaultWorker::initconf()
 {
+	// 准备日志目录
+	Log::set_log_dir("log/worker", "worker");
+
 	// 通讯准备(只有一个worker的情况下)
 	ProcessComm *proCommInstance = ProcessComm::getInstance();
 

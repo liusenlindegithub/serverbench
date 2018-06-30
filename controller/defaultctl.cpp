@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "defaultctl.h"
+#include "../utils/log/log.h"
 
 using namespace std;
 
@@ -17,7 +18,9 @@ CDdefaultControl::~CDdefaultControl()
 
 void CDdefaultControl::realrun()
 {
-	cout << "control run..." << endl;
+	// 准备日志目录
+	Log::set_log_dir("log/control", "control");
+	
 	monsrv.initconf();
 	
 	while(true)

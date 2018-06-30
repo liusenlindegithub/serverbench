@@ -16,7 +16,7 @@ using namespace std;
 
 CIncoming::CIncoming()
 {
-	cout << "CIncoming()" << endl;
+	
 }
 
 void CIncoming::init()

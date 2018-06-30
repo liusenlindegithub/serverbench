@@ -25,6 +25,7 @@ public:
 	static void i_log_warn(const char *code_file, const char *code_func, int code_line, const char *fmt, ...);
 	static void i_log_info(const char *code_file, const char *code_func, int code_line, const char *fmt, ...);
 	static void i_log_debug(const char *code_file, const char *code_func, int code_line, const char *fmt, ...);
+	static void set_log_dir(string dirname, string appname);
 
 private:
 	static int curr_log_level;

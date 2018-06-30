@@ -111,7 +111,6 @@ void CMonitorProcSrv::initconf()
 	do
 	{
 		ret = mqcomm->recv((struct msgbuf *)&promsg[0], sizeof(ProcMonMsg) - sizeof(long), 0);
-		cout << "clear mq message..." << endl;
 	}while (ret > 0);
 }
 
@@ -143,7 +142,6 @@ void CMonitorProcSrv::killallproc()
 
 void CMonitorProcSrv::doRecv(int msgtype)
 {
-	//cout << "=================== controller do recv begin ===================" << endl;
 	int ret;
 	do
 	{
@@ -164,21 +162,19 @@ void CMonitorProcSrv::doRecv(int msgtype)
 					addProc(tinfo);
 				}
 
-				//cout << "tick msg: groupid=" << tinfo.groupid << ", procid=" << tinfo.procid << ", timestamp=" << tinfo.timestamp << endl;
 			}
 		}
 		else
 		{
-			//cout << "no promsg: ret=" << ret << ", errno=" << errno << endl;
+			log_debug("receive heartbeat message over. ret=%d, errno=%d", ret, errno);
+			cout << "receive heartbeat message over. ret="<< ret << ", errno="<< errno << endl;
 		}
 	}
 	while (ret > 0);
-	//cout << "=================== controller do recv end ===================" << endl;
 }
 
 void CMonitorProcSrv::doCheck()
 {
-	//cout << "=================== controller do check begin ===================" << endl;
 	vector<CProcGroup>::iterator groupitor = procgroup.begin();
 	while(groupitor != procgroup.end())
 	{
@@ -190,13 +186,11 @@ void CMonitorProcSrv::doCheck()
 		{
 			ProcEvent event(PROCMON_EVENT_PROCDOWN, groupitor->groupinfo.groupid, -1);
 			events.push_back(event);
-			//cout << "PROCMON_EVENT_PROCDOWN , groupid=" << groupitor->groupinfo.groupid << ", currpronum=" << currpronum << ", minprocnum=" << minprocnum << endl;
 		}
 		else if(currpronum > maxprocnum)
 		{
 			ProcEvent event(PROCMON_EVENT_PROCUP, groupitor->groupinfo.groupid, -1);
 			events.push_back(event);
-			//cout << "PROCMON_EVENT_PROCUP , groupid=" << groupitor->groupinfo.groupid << ", currpronum=" << currpronum << ", minprocnum=" << minprocnum << endl;
 		}
 
 		list<CProc> &procs = groupitor->proclist;
@@ -208,7 +202,6 @@ void CMonitorProcSrv::doCheck()
 			{
 				ProcEvent event(PROCMON_EVENT_PROCDEAD, groupitor->groupinfo.groupid, procitor->procid);
 				events.push_back(event);
-				//cout << "PROCMON_EVENT_PROCDEAD , groupid=" << groupitor->groupinfo.groupid << ", procid=" << procitor->procid << ", timestamp=" << procitor->timestamp << endl;
 			}
 			procitor++;
 		}
@@ -217,7 +210,6 @@ void CMonitorProcSrv::doCheck()
 	}
 
 	doEvent();
-	//cout << "=================== controller do check end ===================" << endl;
 }
 
 CProc &CMonitorProcSrv::findProc(int groupid, int procid)
@@ -259,7 +251,6 @@ void CMonitorProcSrv::addProc(ProcMsg &promsg)
 			list<CProc>::iterator it = find(procs.begin(), procs.end(), proc);
 			if(it == procs.end())
 			{
-				cout << "add proc !!!!" << endl;
 				procs.insert(it, proc);
 			}
 			break;
@@ -330,8 +321,8 @@ void CMonitorProcSrv::doEvent()
 					
 					for(int i=0; i<diff; i++)
 					{
+						log_debug("process heartbeat event. start new process:%s", procgroup.groupinfo.execfile.c_str());
 						system(cmdbuf);
-						cout << "exec cmd:" << cmdbuf << endl;
 						usleep(12000);
 					}
 				}
@@ -357,6 +348,7 @@ void CMonitorProcSrv::doEvent()
 						advance(itor, maxprocnum);
 						for(; itor != procs.end(); itor++)
 						{
+							log_debug("process heartbeat event. delete surplus process:%s", procgroup.groupinfo.execfile.c_str());
 							waitdel.push_back(make_pair(groupid, itor->procid));
 						}
 					}
@@ -372,7 +364,6 @@ void CMonitorProcSrv::doEvent()
 				delProc(groupid, procid);
 				usleep(12000);
 				doRecv(procid);
-				cout << "up kill proc:%d" << endl;
 			}
 		}
 		else if(event & PROCMON_EVENT_PROCDEAD)
@@ -380,7 +371,16 @@ void CMonitorProcSrv::doEvent()
 			kill(procid, SIGKILL);
 			doRecv(procid);
 			delProc(groupid, procid);
-			cout << "procard kill proc:%d" << endl;
+
+			auto procGroupIter = find_if(procgroup.begin(), procgroup.end(), [&](CProcGroup &pg)->bool{
+ 				if(pg.groupinfo.groupid == groupid) {
+					return true;
+				}
+			});
+			if(procGroupIter != procgroup.end())
+			{
+				log_debug("process heartbeat event. delete death process:%s", procGroupIter->groupinfo.execfile.c_str());
+			}
 		}
 	}
 

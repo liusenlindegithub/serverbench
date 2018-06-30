@@ -13,8 +13,8 @@ using namespace std;
 
 int Log::curr_log_level = LOG_LEVEL_DEBUG;
 
-string Log::logdir = "../log";
-string Log::appname = "server";
+string Log::logdir = "log";
+string Log::appname = "default";
 
 /**
 	获取可变参数中第一个参数地址，并格式化写入。
@@ -119,7 +119,6 @@ void Log::write_log(int level, const char *code_file, const char *code_func, int
 	buff[buff_offset++] = '\n';
 	buff[buff_offset++] = '\0';
 	
-	cout << buff << endl;
 	int offset = snprintf(logfile, sizeof(logfile), "%s/%s_%04d%02d%02d.log", logdir.c_str(), appname.c_str(), tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 	logfile[offset] = '\0';
 	ofstream fout(logfile, ios::app);
@@ -127,4 +126,10 @@ void Log::write_log(int level, const char *code_file, const char *code_func, int
 	fout.close();
 
 	errno = _errno;
+}
+
+void Log::set_log_dir(string dirname, string appname)
+{
+	Log::logdir = dirname;
+	Log::appname = appname;
 }

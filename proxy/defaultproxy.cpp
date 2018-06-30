@@ -12,9 +12,11 @@ using namespace std;
 #include "../utils/comm/singleton.h"
 #include "../netcomm/processcomm.h"
 
+#include "../utils/log/log.h"
+
 CDefaultProxy::CDefaultProxy()
 {
-	cout << "CDefaultProxy()" << endl;
+	
 }
 
 CDefaultProxy::~CDefaultProxy()
@@ -24,6 +26,9 @@ CDefaultProxy::~CDefaultProxy()
 
 void CDefaultProxy::initconf()
 {
+	// 准备日志目录
+	Log::set_log_dir("log/server", "server");
+
 	// 通讯准备(只有一个worker的情况下)
 	ProcessComm *proCommInstance = ProcessComm::getInstance();
 

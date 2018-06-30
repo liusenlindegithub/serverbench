@@ -54,9 +54,7 @@ key_t CMQCommu::pwdtokey(int id)
 {
 	char seed[256];
 	readlink("/proc/self/exe", seed, 256);
-	cout << "----------------pwdtokey seed1=" << seed << endl;
 	dirname(seed);
-	cout << "----------------pwdtokey seed2=" << seed << endl;
 
 	int seed_len = strlen(seed) + sizeof(id);
 	memcpy(seed + strlen(seed), &id, sizeof(id));
