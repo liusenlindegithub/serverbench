@@ -9,7 +9,7 @@ DEPS := $(patsubst %.o,%.d,$(OBJS))
 INCLUDE := -I/usr/local/openssl/include
 LIBS := -L/usr/local/lib -lprotobuf -L/usr/local/openssl/lib -lcrypto -lssl
 
-CXXFLAGS := -std=c++11 -g
+CXXFLAGS := -std=c++11 -g -D_GLIBCXX_USE_CXX11_ABI=0
 
 ##指明目标所依赖的文件所在位置
 VPATH := 
