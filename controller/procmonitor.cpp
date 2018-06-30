@@ -166,8 +166,8 @@ void CMonitorProcSrv::doRecv(int msgtype)
 		}
 		else
 		{
-			log_debug("receive heartbeat message over. ret=%d, errno=%d", ret, errno);
-			cout << "receive heartbeat message over. ret="<< ret << ", errno="<< errno << endl;
+			//log_debug("receive heartbeat message over. ret=%d, errno=%d", ret, errno);
+			//cout << "receive heartbeat message over. ret="<< ret << ", errno="<< errno << endl;
 		}
 	}
 	while (ret > 0);
