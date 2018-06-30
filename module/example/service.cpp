@@ -39,7 +39,7 @@ int bench_handle_process(char *data, int datalen, int seq, void *arg)
 {
 	cout << "bench_handle_process" << endl;
 
-	ProcessCommItem *commItem = dynamic_cast<ProcessCommItem *>((ProcessCommItem *)arg2);
+	ProcessCommItem *commItem = dynamic_cast<ProcessCommItem *>((ProcessCommItem *)arg);
 
 	if(data == NULL) {
 		cout << "dataCache NULL Pointer..." << endl;
